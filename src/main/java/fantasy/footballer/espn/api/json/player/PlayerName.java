@@ -9,4 +9,6 @@ public class PlayerName {
     public String firstName;
     @Key("playerId")
     public Integer playerId;
+    @Key("defaultPositionId")
+    public Integer positionId;
 }

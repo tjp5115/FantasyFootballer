@@ -9,6 +9,7 @@ import fantasy.footballer.espn.api.player.PlayerInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -59,6 +60,8 @@ public class Main {
             .forPage(1)
             .sendRequest();
         GenericJson genJson = response1.parseAs(GenericJson.class);
+        Map<Integer, List<Player>> positions = leaguePlayerInfo.stream()
+            .collect( Collectors.groupingBy( player -> player.name.positionId ));
         System.out.println(genJson.toPrettyString());
     }
 }

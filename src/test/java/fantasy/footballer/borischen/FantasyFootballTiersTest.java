@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 class FantasyFootballTiersTest {
     @Test
     void wide_reciever_and_ppr_url() {
-        String result = new FantasyFootballTiers(PlayerType.WIDE_RECIEVER,LeagueType.PPR).getUrl();
+        String result = new FantasyFootballTiers(PlayerType.WIDE_RECEIVER,LeagueType.PPR).getUrl();
         Assertions.assertEquals("https://s3-us-west-1.amazonaws.com/fftiers/out/text_WR-PPR.txt",result);
     }
 

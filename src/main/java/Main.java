@@ -56,5 +56,6 @@ public class Main {
 
         PlayerFinder playerFinder = new PlayerFinder();
         playerFinder.addEspnPlayers(leaguePlayerInfo);
+        playerFinder.findPossibleWideReceivers();
     }
 }

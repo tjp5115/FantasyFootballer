@@ -1,15 +1,14 @@
 import com.google.api.client.http.HttpResponse;
-import com.google.api.client.json.GenericJson;
 import fantasy.footballer.espn.api.json.player.Player;
 import fantasy.footballer.espn.api.json.player.PlayerInfoJSON;
 import fantasy.footballer.espn.api.json.scoreboard.ScoreBoard;
 import fantasy.footballer.espn.api.league.LeagueInfo;
 import fantasy.footballer.espn.api.player.PlayerInfo;
+import fantasy.footballer.player.finder.PlayerFinder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,7 +37,7 @@ public class Main {
                 .forPage(page)
                 .sendRequest();
 
-            List<Player> players = response.parseAs(PlayerInfoJSON.class).players.player;
+            List<Player> players = response.parseAs(PlayerInfoJSON.class).team.players;
             leaguePlayerInfo.addAll(
                 players.stream()
                     .filter(player -> player.teamId != -1)
@@ -55,13 +54,7 @@ public class Main {
             }
         }
 
-
-        HttpResponse response1 = new PlayerInfo()
-            .forPage(1)
-            .sendRequest();
-        GenericJson genJson = response1.parseAs(GenericJson.class);
-        Map<Integer, List<Player>> positions = leaguePlayerInfo.stream()
-            .collect( Collectors.groupingBy( player -> player.name.positionId ));
-        System.out.println(genJson.toPrettyString());
+        PlayerFinder playerFinder = new PlayerFinder();
+        playerFinder.addEspnPlayers(leaguePlayerInfo);
     }
 }

@@ -4,7 +4,7 @@ import com.google.api.client.util.Key;
 
 import java.util.ArrayList;
 
-public class Players {
+public class Team {
     @Key("players")
-    public ArrayList<Player> player;
+    public ArrayList<Player> players;
 }

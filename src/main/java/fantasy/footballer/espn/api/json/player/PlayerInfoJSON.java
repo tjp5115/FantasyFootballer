@@ -4,6 +4,6 @@ import com.google.api.client.util.Key;
 
 public class PlayerInfoJSON {
     @Key("playerInfo")
-    public Players players;
+    public Team team;
 
 }

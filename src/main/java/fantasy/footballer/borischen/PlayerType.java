@@ -37,4 +37,8 @@ public enum PlayerType {
             default: throw new IllegalArgumentException("'"+Integer.toString(i)+"' is not a valid position");
         }
     }
+
+    public String getName() {
+        return abbreviation;
+    }
 }

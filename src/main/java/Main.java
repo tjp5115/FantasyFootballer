@@ -4,7 +4,7 @@ import fantasy.footballer.espn.api.json.player.PlayerInfoJSON;
 import fantasy.footballer.espn.api.json.scoreboard.ScoreBoard;
 import fantasy.footballer.espn.api.league.LeagueInfo;
 import fantasy.footballer.espn.api.player.PlayerInfo;
-import fantasy.footballer.player.finder.PlayerFinder;
+import fantasy.footballer.player.finder.EspnPlayerFinder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +14,10 @@ import java.util.stream.Collectors;
 
 public class Main {
 
-    private static final int leagueID = 102116;
+    private static final int leagueID = 102116; //blaz
+    private static final int MY_TEAM_ID = 4; //blaz
+    //private static final int leagueID = 155338; //burn
+    //private static final int MY_TEAM_ID = 15; //burn
 
     public static void main(String args[]) throws IOException {
 
@@ -54,8 +57,9 @@ public class Main {
             }
         }
 
-        PlayerFinder playerFinder = new PlayerFinder();
-        playerFinder.addEspnPlayers(leaguePlayerInfo);
-        playerFinder.findPossibleWideReceivers();
+        EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder();
+        espnPlayerFinder.addEspnPlayers(leaguePlayerInfo);
+        espnPlayerFinder.setMyTeam(MY_TEAM_ID);
+        espnPlayerFinder.findAllPossible();
     }
 }

@@ -14,7 +14,7 @@ public class EspnPlayerFinder {
 
     private Map<PlayerType, List<Player>> positions;
     private Map<PlayerType,Map<Integer,List<PlayerIdentifier>>> playerTeirs;
-    private int myTeam = -1;
+    private Optional<Integer> myTeam = Optional.empty();
     private HashMap<PlayerType, List<PlayerIdentifier>> myPlayers;
     private FantasyFootballTiers teirGenerator;
 
@@ -30,7 +30,7 @@ public class EspnPlayerFinder {
     }
 
     public void setMyTeam(int myTeam){
-        this.myTeam = myTeam;
+        this.myTeam = Optional.of(myTeam);
     }
 
     public void findAllPossible(){
@@ -68,12 +68,12 @@ public class EspnPlayerFinder {
     }
 
     private List<PlayerIdentifier> getMyPlayers(PlayerType playerType) {
-        return myPlayers.computeIfAbsent(playerType, myPlayers -> populateMyPlayers(playerType));
+         return myPlayers.computeIfAbsent(playerType, myPlayers -> populateMyPlayers(playerType));
     }
 
     private List<PlayerIdentifier> populateMyPlayers(PlayerType playerType) {
         return positions.get(playerType).stream()
-            .filter(player -> player.teamId == myTeam)
+            .filter(player -> myTeam.isPresent() && player.teamId == myTeam.get().intValue())
             .map(PlayerIdentifier::createForEspn)
             .collect(Collectors.toList());
     }
@@ -105,5 +105,8 @@ public class EspnPlayerFinder {
             )).entrySet().stream()
             .filter(entry -> !entry.getValue().isEmpty())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    public void findTeamBestLineup() {
     }
 }

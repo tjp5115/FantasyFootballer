@@ -1,4 +1,5 @@
 import com.google.api.client.http.HttpResponse;
+import fantasy.footballer.borischen.FantasyFootballTiers;
 import fantasy.footballer.espn.api.json.player.Player;
 import fantasy.footballer.espn.api.json.player.PlayerInfoJSON;
 import fantasy.footballer.espn.api.json.scoreboard.ScoreBoard;
@@ -57,7 +58,7 @@ public class Main {
             }
         }
 
-        EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder();
+        EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder( new FantasyFootballTiers());
         espnPlayerFinder.addEspnPlayers(leaguePlayerInfo);
         espnPlayerFinder.setMyTeam(MY_TEAM_ID);
         espnPlayerFinder.findAllPossible();

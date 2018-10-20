@@ -12,11 +12,13 @@ import java.util.*;
 public class FantasyFootballTiers {
     private final static String BASE_URL = "https://s3-us-west-1.amazonaws.com/fftiers/out/text_";
     private final static String FILE_EXTENSION = ".txt";
-    private String url;
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
-    public FantasyFootballTiers(PlayerType playerType, LeagueType leagueType){
+    public FantasyFootballTiers(){
+
+    }
+    String getUrl(PlayerType playerType, LeagueType leagueType){
         StringBuilder sb = new StringBuilder(BASE_URL)
             .append(playerType);
         if( playerType.hasLeagueType ) {
@@ -24,16 +26,13 @@ public class FantasyFootballTiers {
                 .append(leagueType);
         }
         sb.append(FILE_EXTENSION);
-        url = sb.toString();
-    }
-    String getUrl(){
-        return url;
+        return sb.toString();
     }
 
-    public Map<Integer,List<String>> getTiers(){
+    public Map<Integer,List<String>> getTiers(PlayerType playerType, LeagueType leagueType){
         String[] response = new String[0];
         try {
-             response = sendRequest().split("\n");
+             response = sendRequest(new GenericUrl(getUrl(playerType,leagueType))).split("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,9 +53,9 @@ public class FantasyFootballTiers {
 
 
 
-    private String sendRequest() throws IOException {
+    private String sendRequest(GenericUrl url) throws IOException {
         HttpRequestFactory requestFactory = HTTP_TRANSPORT.createRequestFactory();
-        HttpResponse response = requestFactory.buildGetRequest(new GenericUrl(url)).execute();
+        HttpResponse response = requestFactory.buildGetRequest(url).execute();
         return response.parseAsString();
     }
 }

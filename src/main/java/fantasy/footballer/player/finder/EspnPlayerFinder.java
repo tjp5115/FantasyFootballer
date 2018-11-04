@@ -44,7 +44,7 @@ public class EspnPlayerFinder {
 
         Map<Integer, List<PlayerIdentifier>> possiblePlayersToPickUp = getPossiblePlayers(playerType,playerIdentifier -> !leaguePlayers.contains(playerIdentifier));
 
-        Integer bestTeirAvailable = possiblePlayersToPickUp.keySet().stream()
+        Integer bestTierAvailable = possiblePlayersToPickUp.keySet().stream()
             .mapToInt(i -> i)
             .min()
             .orElseThrow(NoSuchElementException::new);
@@ -58,12 +58,12 @@ public class EspnPlayerFinder {
             .max()
             .orElse(999);
 
-        if (worstTierMyTeamHas > bestTeirAvailable) {
+        if (worstTierMyTeamHas > bestTierAvailable) {
             System.out.println(playerType.getName() + " : " + "Trade " + possiblePlayersToDrop.get(worstTierMyTeamHas) + "( Teir " + Integer.toString(worstTierMyTeamHas)
-                + " ) for " + possiblePlayersToPickUp.get(bestTeirAvailable) + "( Teir " + Integer.toString(bestTeirAvailable) + " )");
+                + " ) for " + possiblePlayersToPickUp.get(bestTierAvailable) + "( Teir " + Integer.toString(bestTierAvailable) + " )");
         } else {
             System.out.println(playerType.getName() + " : Your Players: " + possiblePlayersToDrop.get(worstTierMyTeamHas) + "( Teir " + Integer.toString(worstTierMyTeamHas)
-                + " ) Best Upgrade: " + possiblePlayersToPickUp.get(bestTeirAvailable) + "( Teir " + Integer.toString(bestTeirAvailable) + " )");
+                + " ) Best Upgrade: " + possiblePlayersToPickUp.get(bestTierAvailable) + "( Teir " + Integer.toString(bestTierAvailable) + " )");
         }
     }
 
@@ -100,7 +100,7 @@ public class EspnPlayerFinder {
             .collect(Collectors.toMap(
                 Map.Entry::getKey,
                 entry -> entry.getValue().stream()
-                    .filter(predicate::test)
+                    .filter(predicate)
                     .collect(Collectors.toList())
             )).entrySet().stream()
             .filter(entry -> !entry.getValue().isEmpty())

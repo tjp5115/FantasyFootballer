@@ -1,5 +1,8 @@
 package fantasy.footballer.borischen;
 
+import fantasy.footballer.Position.Position;
+
+// todo this should be called position. Needs to be reworked -- move to a generic place and let everyone use it.
 public enum PlayerType {
     WIDE_RECEIVER("WR",true),
     RUNNING_BACK("RB",true),
@@ -40,5 +43,17 @@ public enum PlayerType {
 
     public String getName() {
         return abbreviation;
+    }
+
+    public static PlayerType fromFanDuel(String postition) {
+        switch( postition ){
+            case "QB": return QUARTER_BACK;
+            case "RB": return RUNNING_BACK;
+            case "WR": return WIDE_RECEIVER;
+            case "TE": return TIGHT_END;
+            case "K": return KICKER;
+            case "D": return DEFENCE;
+            default: throw new IllegalArgumentException("'"+postition+"' is not a valid position");
+        }
     }
 }

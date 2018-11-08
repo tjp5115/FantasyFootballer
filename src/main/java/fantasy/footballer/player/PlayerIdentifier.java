@@ -1,7 +1,8 @@
 package fantasy.footballer.player;
 
 import fantasy.footballer.borischen.PlayerType;
-import fantasy.footballer.espn.api.json.player.Player;
+import fantasy.footballer.espn.api.json.player.ESPNPlayer;
+import fantasy.footballer.fanduel.player.FanDuelPlayer;
 
 public class PlayerIdentifier {
 
@@ -22,11 +23,24 @@ public class PlayerIdentifier {
         return playerIdentifier;
     }
 
-    public static PlayerIdentifier createForEspn(Player player){
+    public static PlayerIdentifier createForEspn(ESPNPlayer ESPNPlayer){
+        return createForName(ESPNPlayer.name.firstName, ESPNPlayer.name.lastName);
+    }
+
+    public static PlayerIdentifier createForFanDuel(FanDuelPlayer player){
+        if(PlayerType.DEFENCE.equals(player.getPosition())){
+            PlayerIdentifier playerIdentifier = new PlayerIdentifier();
+            playerIdentifier.identifier = player.getLastName().toLowerCase();
+            return playerIdentifier;
+        }
+        return createForName(player.getFirstName(),player.getLastName());
+    }
+
+    private static PlayerIdentifier createForName(String firstName, String lastName){
         PlayerIdentifier playerIdentifier = new PlayerIdentifier();
         playerIdentifier.identifier = new StringBuilder()
-            .append(playerIdentifier.scrubIdentifier(player.name.firstName))
-            .append(playerIdentifier.scrubIdentifier(player.name.lastName))
+            .append(playerIdentifier.scrubIdentifier(firstName))
+            .append(playerIdentifier.scrubIdentifier(lastName))
             .toString();
         return playerIdentifier;
     }

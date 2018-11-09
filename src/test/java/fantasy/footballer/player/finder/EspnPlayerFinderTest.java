@@ -43,9 +43,9 @@ class EspnPlayerFinderTest {
 
 
         List<Player> players = new ArrayList<>();
-        players.add(createPlayer(1,"FIRST","POPULAR"));
+        players.add(createPlayer(1,espnPlayers.get(1)));
         players.add(createPlayer(9,"FIRST","BAD_PLAYER"));
-        players.add(createPlayer(6,"FIRST","TRADE"));
+        players.add(createPlayer(6,espnPlayers.get(0)));
         players.add(createPlayer(5,"FIRST","PICKUP"));
         when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
 
@@ -58,6 +58,10 @@ class EspnPlayerFinderTest {
         assertEquals(1,  playerPosition.getPossiblePlayersToPickUp().size());
         assertEquals(createPlayer(6,"FIRST","TRADE"), playerPosition.getPossiblePlayersToDrop().get(0));
         assertEquals(1, playerPosition.getPossiblePlayersToDrop().size());
+    }
+
+    private Player createPlayer(int i, ESPNPlayer espnPlayer) {
+        return createPlayer(i,espnPlayer.name.firstName,espnPlayer.name.lastName);
     }
 
     private ESPNPlayer createESPNPlayer(String first, String last, int teamId) {

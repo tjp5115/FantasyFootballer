@@ -4,12 +4,15 @@ import fantasy.footballer.borischen.Position;
 import fantasy.footballer.espn.api.json.player.ESPNPlayer;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 
+import java.util.Optional;
+
 public class PlayerIdentifier {
 
-    String identifier;
+    private final String identifier;
 
-    private PlayerIdentifier(){
-
+    PlayerIdentifier(String identifier){
+        if( identifier == null ) throw new IllegalArgumentException("Identifier can not be null");
+        this.identifier = identifier;
     }
 
     public static PlayerIdentifier createForBorichen(String player,Position position){
@@ -18,9 +21,7 @@ public class PlayerIdentifier {
             player = words[words.length-1];
         }
 
-        PlayerIdentifier playerIdentifier = new PlayerIdentifier();
-        playerIdentifier.identifier = playerIdentifier.scrubIdentifier(player);
-        return playerIdentifier;
+        return new PlayerIdentifier(scrubIdentifier(player));
     }
 
     public static PlayerIdentifier createForEspn(ESPNPlayer ESPNPlayer){
@@ -29,23 +30,17 @@ public class PlayerIdentifier {
 
     public static PlayerIdentifier createForFanDuel(FanDuelPlayer player){
         if(Position.DEFENCE.equals(player.getPosition())){
-            PlayerIdentifier playerIdentifier = new PlayerIdentifier();
-            playerIdentifier.identifier = player.getLastName().toLowerCase();
-            return playerIdentifier;
+            return new PlayerIdentifier(player.getLastName().toLowerCase());
         }
         return createForName(player.getFirstName(),player.getLastName());
     }
 
     private static PlayerIdentifier createForName(String firstName, String lastName){
-        PlayerIdentifier playerIdentifier = new PlayerIdentifier();
-        playerIdentifier.identifier = new StringBuilder()
-            .append(playerIdentifier.scrubIdentifier(firstName))
-            .append(playerIdentifier.scrubIdentifier(lastName))
-            .toString();
-        return playerIdentifier;
+        String identifier = scrubIdentifier(firstName) + scrubIdentifier(lastName);
+        return new PlayerIdentifier(identifier);
     }
 
-    private String scrubIdentifier(String str){
+    private static String scrubIdentifier(String str){
         str = str.toLowerCase();
         str = str.replaceAll(" ii","");
         str = str.replaceAll(" jr.", "");
@@ -56,10 +51,7 @@ public class PlayerIdentifier {
 
     @Override
     public boolean equals(Object obj) {
-        if ( obj instanceof PlayerIdentifier ){
-            return ((PlayerIdentifier) obj).identifier.equals(this.identifier);
-        }
-        return false;
+        return obj instanceof PlayerIdentifier && ((PlayerIdentifier) obj).identifier.equals(this.identifier);
     }
 
     @Override

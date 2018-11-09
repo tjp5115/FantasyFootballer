@@ -8,8 +8,8 @@ public class FanDuelPlayer extends Player {
     private PlayerIdentifier playerIdentifier;
     private Integer salary;
 
-    public FanDuelPlayer(String position) {
-        super(Position.fromFanDuel(position));
+    public FanDuelPlayer(Position position) {
+        super(position);
     }
 
     public void setSalary(String salary) {

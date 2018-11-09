@@ -1,7 +1,5 @@
 package fantasy.footballer.borischen;
 
-import fantasy.footballer.Position.Position;
-
 // todo this should be called position. Needs to be reworked -- move to a generic place and let everyone use it.
 public enum PlayerType {
     WIDE_RECEIVER("WR",true),

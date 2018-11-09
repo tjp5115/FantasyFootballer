@@ -43,6 +43,11 @@ public abstract class Player {
     public abstract PlayerIdentifier getPlayerIdentifier();
 
     @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Player && getPlayerIdentifier().equals(((Player) obj).getPlayerIdentifier());
+    }
+
+    @Override
     public String toString() {
         return position + " : " + firstName + " " + lastName;
     }

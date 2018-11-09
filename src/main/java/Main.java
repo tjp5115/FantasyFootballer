@@ -85,7 +85,7 @@ public class Main {
         EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder( new FantasyFootballTiers(LeagueType.PPR));
         espnPlayerFinder.addEspnPlayers(leagueESPNPlayerInfo);
         espnPlayerFinder.setMyTeam(teamID);
-        espnPlayerFinder.findAllPossible();
+        espnPlayerFinder.findAllPossible().forEach(System.out::println);
         espnPlayerFinder.findTeamBestLineup();
 
         System.out.println();

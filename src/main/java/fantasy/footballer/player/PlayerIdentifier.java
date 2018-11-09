@@ -10,7 +10,7 @@ public class PlayerIdentifier {
 
     private final String identifier;
 
-    PlayerIdentifier(String identifier){
+    public PlayerIdentifier(String identifier){
         if( identifier == null ) throw new IllegalArgumentException("Identifier can not be null");
         this.identifier = identifier;
     }

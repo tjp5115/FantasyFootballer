@@ -9,7 +9,6 @@ import fantasy.footballer.player.Player;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FantasyFootballTiers {
     private final static String BASE_URL = "https://s3-us-west-1.amazonaws.com/fftiers/out/text_";
@@ -18,17 +17,17 @@ public class FantasyFootballTiers {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private final LeagueType leagueType;
 
-    Map<PlayerType,List<Player>> tier = new HashMap<>();
+    Map<Position,List<Player>> tier = new HashMap<>();
 
 
     public FantasyFootballTiers(LeagueType leagueType){
        this.leagueType = leagueType;
     }
 
-    String getUrl(PlayerType playerType){
+    String getUrl(Position position){
         StringBuilder sb = new StringBuilder(BASE_URL)
-            .append(playerType);
-        if( playerType.hasLeagueType ) {
+            .append(position);
+        if( position.hasLeagueType ) {
             sb.append('-')
                 .append(leagueType);
         }
@@ -36,14 +35,14 @@ public class FantasyFootballTiers {
         return sb.toString();
     }
 
-    public List<Player> getTiers(PlayerType playerType){
-        return tier.computeIfAbsent(playerType,this::computeTeir);
+    public List<Player> getTiers(Position position){
+        return tier.computeIfAbsent(position,this::computeTeir);
     }
 
-    private List<Player> computeTeir(PlayerType playerType) {
+    private List<Player> computeTeir(Position position) {
         String[] response = new String[0];
         try {
-            response = sendRequest(new GenericUrl(getUrl(playerType))).split("\n");
+            response = sendRequest(new GenericUrl(getUrl(position))).split("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +55,7 @@ public class FantasyFootballTiers {
 
             String[] players = tierAndPlayers.substring(i+1,tierAndPlayers.length()).split(",");
             for (String player : players) {
-                tierList.add(new BorischenPlayer( playerType, player, tier ) );
+                tierList.add(new BorischenPlayer(position, player, tier ) );
             }
         }
         return tierList;

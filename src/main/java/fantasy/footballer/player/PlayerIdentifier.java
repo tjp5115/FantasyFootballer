@@ -1,6 +1,6 @@
 package fantasy.footballer.player;
 
-import fantasy.footballer.borischen.PlayerType;
+import fantasy.footballer.borischen.Position;
 import fantasy.footballer.espn.api.json.player.ESPNPlayer;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 
@@ -12,8 +12,8 @@ public class PlayerIdentifier {
 
     }
 
-    public static PlayerIdentifier createForBorichen(String player,PlayerType playerType){
-        if(playerType.equals(PlayerType.DEFENCE)){
+    public static PlayerIdentifier createForBorichen(String player,Position position){
+        if(position.equals(Position.DEFENCE)){
             String[] words = player.split(" ");
             player = words[words.length-1];
         }
@@ -28,7 +28,7 @@ public class PlayerIdentifier {
     }
 
     public static PlayerIdentifier createForFanDuel(FanDuelPlayer player){
-        if(PlayerType.DEFENCE.equals(player.getPosition())){
+        if(Position.DEFENCE.equals(player.getPosition())){
             PlayerIdentifier playerIdentifier = new PlayerIdentifier();
             playerIdentifier.identifier = player.getLastName().toLowerCase();
             return playerIdentifier;

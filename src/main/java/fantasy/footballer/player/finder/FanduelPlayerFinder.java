@@ -1,7 +1,7 @@
 package fantasy.footballer.player.finder;
 
 import fantasy.footballer.borischen.FantasyFootballTiers;
-import fantasy.footballer.borischen.PlayerType;
+import fantasy.footballer.borischen.Position;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 import fantasy.footballer.player.Player;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class FanduelPlayerFinder {
 
 
-    private Map<PlayerType,List<FanDuelPlayer>> fanduelPlayers;
+    private Map<Position,List<FanDuelPlayer>> fanduelPlayers;
     private FantasyFootballTiers fantasyFootballTiers;
 
     public FanduelPlayerFinder(List<FanDuelPlayer> fanduelPlayerList, FantasyFootballTiers fantasyFootballTiers){
@@ -35,20 +35,20 @@ public class FanduelPlayerFinder {
     }
 
     public List<Player> findCheapestPlayersForTier(int tier){
-        return Arrays.stream(PlayerType.values())
+        return Arrays.stream(Position.values())
             .map(playerType -> findCheapestPlayerForTier(playerType,tier))
             .collect(Collectors.toList());
     }
-    public Player findCheapestPlayerForTier(PlayerType playerType, Integer tier){
-        List<FanDuelPlayer> playersForPosition = getPlayersForPosition(playerType);
+    public Player findCheapestPlayerForTier(Position position, Integer tier){
+        List<FanDuelPlayer> playersForPosition = getPlayersForPosition(position);
         List<FanDuelPlayer> playersForTeir = playersForPosition.stream()
             .filter(fanduelPlayer -> fanduelPlayer.getTier().equals(tier))
             .collect(Collectors.toList());
         return playersForTeir.stream().min(Comparator.comparing(FanDuelPlayer::getSalary)).orElse(null);
     }
 
-    private List<FanDuelPlayer> getPlayersForPosition(PlayerType playerType) {
-        return fanduelPlayers.getOrDefault(playerType, Collections.EMPTY_LIST);
+    private List<FanDuelPlayer> getPlayersForPosition(Position position) {
+        return fanduelPlayers.getOrDefault(position, Collections.EMPTY_LIST);
     }
 
 }

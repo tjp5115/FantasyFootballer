@@ -7,7 +7,7 @@ public class BorischenPlayer extends Player{
     private final PlayerIdentifier playerIdentifier;
     private final String playerName;
 
-    public BorischenPlayer(PlayerType position, String player, Integer tier) {
+    public BorischenPlayer(Position position, String player, Integer tier) {
         super(position);
         playerIdentifier = PlayerIdentifier.createForBorichen(player, getPosition());
         this.tier = tier;

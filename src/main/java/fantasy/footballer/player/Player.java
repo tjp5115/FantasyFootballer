@@ -1,18 +1,18 @@
 package fantasy.footballer.player;
 
-import fantasy.footballer.borischen.PlayerType;
+import fantasy.footballer.borischen.Position;
 
 public abstract class Player {
-    private PlayerType position;
+    private Position position;
     private String lastName;
     private String firstName;
     protected Integer tier;
 
-    protected Player(PlayerType position){
+    protected Player(Position position){
         this.position = position;
     }
 
-    public PlayerType getPosition(){
+    public Position getPosition(){
         return position;
     }
 

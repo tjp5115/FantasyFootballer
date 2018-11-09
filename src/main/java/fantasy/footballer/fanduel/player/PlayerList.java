@@ -19,7 +19,7 @@ public class PlayerList {
             records = CSVFormat.DEFAULT.withHeader().parse(in);
         } catch (IOException e) {
             e.printStackTrace();
-            return Collections.EMPTY_LIST;
+            return new ArrayList<>();
         }
         List<FanDuelPlayer> playerList = new ArrayList<>();
         for(CSVRecord record : records){

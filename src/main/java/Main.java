@@ -50,12 +50,15 @@ public class Main {
 
         ScoreBoard scoreBoard = leagueInfo.parseAs(ScoreBoard.class);
 
+        //get all the players that are in the league.
         Set<Integer> leaguePlayerIds = scoreBoard.matchups.teams.stream()
             .flatMap(team -> team.playerIds.stream())
             .flatMap(playerId -> playerId.ids.stream())
             .collect(Collectors.toSet());
 
         List<ESPNPlayer> leagueESPNPlayerInfo = new ArrayList<>();
+        // We have all of the players in the league, but only by ID.
+        // We need to map the ID to a something more generic we can match on with other APIs, I.E. their name
         for( int page = 0; true; page++) {
             HttpResponse response = new PlayerInfo()
                 .forLeague(leagueID)

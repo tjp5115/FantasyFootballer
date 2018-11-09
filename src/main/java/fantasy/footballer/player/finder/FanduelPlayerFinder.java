@@ -48,7 +48,7 @@ public class FanduelPlayerFinder {
     }
 
     private List<FanDuelPlayer> getPlayersForPosition(Position position) {
-        return fanduelPlayers.getOrDefault(position, Collections.EMPTY_LIST);
+        return fanduelPlayers.getOrDefault(position, new ArrayList<>());
     }
 
 }

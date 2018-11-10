@@ -44,11 +44,22 @@ public abstract class Player {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Player && getPlayerIdentifier().equals(((Player) obj).getPlayerIdentifier());
+        if ( obj == null ) {
+            return false;
+        }
+
+        PlayerIdentifier playerIdentifier = null;
+        if ( obj instanceof Player ){
+            playerIdentifier = ((Player) obj).getPlayerIdentifier();
+        }else if( obj instanceof PlayerIdentifier ){
+            playerIdentifier = (PlayerIdentifier)obj;
+        }
+
+        return playerIdentifier != null && playerIdentifier.equals(getPlayerIdentifier());
     }
 
     @Override
     public String toString() {
-        return position + " : " + firstName + " " + lastName;
+        return firstName + " " + lastName + " ( tier " + tier + " ) " ;
     }
 }

@@ -1,14 +1,21 @@
 package fantasy.footballer.player;
 
 import fantasy.footballer.borischen.Position;
-import fantasy.footballer.espn.api.json.player.ESPNPlayer;
+import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerIdentifier {
 
     private final String identifier;
+
+    private static final Map<PlayerIdentifier, PlayerIdentifier> ESPN_EXCEPTIONS;
+    static {
+        ESPN_EXCEPTIONS = new HashMap<>();
+        ESPN_EXCEPTIONS.put(new PlayerIdentifier("mitchelltrubisky"), new PlayerIdentifier("mitchtrubisky"));
+    }
 
     public PlayerIdentifier(String identifier){
         if( identifier == null ) throw new IllegalArgumentException("Identifier can not be null");
@@ -24,8 +31,12 @@ public class PlayerIdentifier {
         return new PlayerIdentifier(scrubIdentifier(player));
     }
 
-    public static PlayerIdentifier createForEspn(ESPNPlayer ESPNPlayer){
-        return createForName(ESPNPlayer.name.firstName, ESPNPlayer.name.lastName);
+    public static PlayerIdentifier createForEspn(EspnPlayerAPI EspnPlayerAPI){
+        PlayerIdentifier identifier = createForName(EspnPlayerAPI.name.firstName, EspnPlayerAPI.name.lastName);
+        if ( ESPN_EXCEPTIONS.containsKey(identifier) ){
+            return ESPN_EXCEPTIONS.get(identifier);
+        }
+        return identifier;
     }
 
     public static PlayerIdentifier createForFanDuel(FanDuelPlayer player){
@@ -52,6 +63,11 @@ public class PlayerIdentifier {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PlayerIdentifier && ((PlayerIdentifier) obj).identifier.equals(this.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
     }
 
     @Override

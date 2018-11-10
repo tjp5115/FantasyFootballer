@@ -12,6 +12,8 @@ public class PlayerName {
     @Key("defaultPositionId")
     public Integer positionId;
 
+    public PlayerName(){}
+
     public PlayerName(String first, String last) {
         firstName = first;
         lastName = last;

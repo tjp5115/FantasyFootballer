@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public class Team {
     @Key("players")
-    public ArrayList<ESPNPlayer> ESPNPlayers;
+    public ArrayList<EspnPlayerAPI> EspnPlayerAPIS;
 }

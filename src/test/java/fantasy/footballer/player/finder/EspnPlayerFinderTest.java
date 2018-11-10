@@ -3,18 +3,15 @@ package fantasy.footballer.player.finder;
 import fantasy.footballer.borischen.BorischenPlayer;
 import fantasy.footballer.borischen.FantasyFootballTiers;
 import fantasy.footballer.borischen.Position;
-import fantasy.footballer.espn.api.json.player.ESPNPlayer;
+import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.espn.api.json.player.PlayerName;
 import fantasy.footballer.player.Player;
-import fantasy.footballer.player.PlayerIdentifier;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,31 +22,33 @@ class EspnPlayerFinderTest {
     @Mock
     FantasyFootballTiers tierGenerator;
 
+    private static int myTeamId = 1;
+
     @BeforeEach
     void before(){
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    void findPossiblePlayersForPosition() {
+    void find_player_with_that_should_be_traded() {
         EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder(tierGenerator);
-        espnPlayerFinder.setMyTeam(1);
+        espnPlayerFinder.setTeamId(myTeamId);
 
-        List<ESPNPlayer> espnPlayers = new ArrayList<>();
-        espnPlayers.add(createESPNPlayer("FIRST","TRADE",1));
-        espnPlayers.add(createESPNPlayer("FIRST","POPULAR",2));
+        List<EspnPlayerAPI> espnPlayerAPIS = new ArrayList<>();
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","TRADE", myTeamId));
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","POPULAR",2));
 
-        espnPlayerFinder.addEspnPlayers(espnPlayers);
+        espnPlayerFinder.addEspnPlayers(espnPlayerAPIS);
 
 
         List<Player> players = new ArrayList<>();
-        players.add(createPlayer(1,espnPlayers.get(1)));
+        players.add(createPlayer(6, espnPlayerAPIS.get(0)));
+        players.add(createPlayer(1, espnPlayerAPIS.get(1)));
         players.add(createPlayer(9,"FIRST","BAD_PLAYER"));
-        players.add(createPlayer(6,espnPlayers.get(0)));
         players.add(createPlayer(5,"FIRST","PICKUP"));
         when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
 
-        PlayerPosition playerPosition = espnPlayerFinder.findPossiblePlayersForPosition(Position.QUARTER_BACK);
+        PlayerPosition playerPosition = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
         assertTrue(playerPosition.shouldTrade());
         assertEquals(5, playerPosition.getBestTierAvailableToPickUp());
@@ -60,16 +59,79 @@ class EspnPlayerFinderTest {
         assertEquals(1, playerPosition.getPossiblePlayersToDrop().size());
     }
 
-    private Player createPlayer(int i, ESPNPlayer espnPlayer) {
-        return createPlayer(i,espnPlayer.name.firstName,espnPlayer.name.lastName);
+    @Test
+    void find_player_with_that_should_not_be_traded() {
+        EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder(tierGenerator);
+        espnPlayerFinder.setTeamId(myTeamId);
+
+        List<EspnPlayerAPI> espnPlayerAPIS = new ArrayList<>();
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","NO_TRADE", myTeamId));
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","POPULAR",2));
+
+        espnPlayerFinder.addEspnPlayers(espnPlayerAPIS);
+
+
+        List<Player> players = new ArrayList<>();
+        players.add(createPlayer(5, espnPlayerAPIS.get(0)));
+        players.add(createPlayer(1, espnPlayerAPIS.get(1)));
+        players.add(createPlayer(9,"FIRST","BAD_PLAYER"));
+        players.add(createPlayer(5,"FIRST","PICKUP"));
+        when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
+
+        PlayerPosition playerPosition = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
+
+        assertFalse(playerPosition.shouldTrade());
+        assertEquals(5, playerPosition.getBestTierAvailableToPickUp());
+        assertEquals(5, playerPosition.getWorstTierOnTeam());
+        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerPosition.getPossiblePlayersToPickUp().get(0));
+        assertEquals(1,  playerPosition.getPossiblePlayersToPickUp().size());
+        assertEquals(createPlayer(5,"FIRST","NO_TRADE"), playerPosition.getPossiblePlayersToDrop().get(0));
+        assertEquals(1, playerPosition.getPossiblePlayersToDrop().size());
     }
 
-    private ESPNPlayer createESPNPlayer(String first, String last, int teamId) {
+    @Test
+    void find_multiple_players_that_should_be_traded() {
+        EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder(tierGenerator);
+        espnPlayerFinder.setTeamId(myTeamId);
+
+        List<EspnPlayerAPI> espnPlayerAPIS = new ArrayList<>();
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","TRADE_A", myTeamId));
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","TRADE_B", myTeamId));
+        espnPlayerAPIS.add(createESPNPlayer("FIRST","POPULAR",2));
+
+        espnPlayerFinder.addEspnPlayers(espnPlayerAPIS);
+
+
+        List<Player> players = new ArrayList<>();
+        players.add(createPlayer(6, espnPlayerAPIS.get(0)));
+        players.add(createPlayer(7, espnPlayerAPIS.get(1)));
+        players.add(createPlayer(1, espnPlayerAPIS.get(2)));
+        players.add(createPlayer(9,"FIRST","BAD_PLAYER"));
+        players.add(createPlayer(5,"FIRST","PICKUP"));
+        when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
+
+        PlayerPosition playerPosition = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
+
+        assertTrue(playerPosition.shouldTrade());
+        assertEquals(5, playerPosition.getBestTierAvailableToPickUp());
+        assertEquals(7, playerPosition.getWorstTierOnTeam());
+        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerPosition.getPossiblePlayersToPickUp().get(0));
+        assertEquals(1,  playerPosition.getPossiblePlayersToPickUp().size());
+        assertTrue(playerPosition.getPossiblePlayersToDrop().contains(createPlayer(6,"FIRST","TRADE_A")));
+        assertTrue(playerPosition.getPossiblePlayersToDrop().contains(createPlayer(7,"FIRST","TRADE_B")));
+        assertEquals(2, playerPosition.getPossiblePlayersToDrop().size());
+    }
+
+    private Player createPlayer(int i, EspnPlayerAPI espnPlayerAPI) {
+        return createPlayer(i, espnPlayerAPI.name.firstName, espnPlayerAPI.name.lastName);
+    }
+
+    private EspnPlayerAPI createESPNPlayer(String first, String last, int teamId) {
         PlayerName playerName = new PlayerName(first,last);
         playerName.positionId = 1; //QB
-        ESPNPlayer espnPlayer = new ESPNPlayer(playerName);
-        espnPlayer.teamId = teamId;
-        return espnPlayer;
+        EspnPlayerAPI espnPlayerAPI = new EspnPlayerAPI(playerName);
+        espnPlayerAPI.teamId = teamId;
+        return espnPlayerAPI;
     }
 
     private Player createPlayer(int tier, String firstName, String lastName) {

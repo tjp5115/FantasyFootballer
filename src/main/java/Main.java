@@ -1,7 +1,7 @@
 import com.google.api.client.http.HttpResponse;
 import fantasy.footballer.borischen.FantasyFootballTiers;
 import fantasy.footballer.borischen.LeagueType;
-import fantasy.footballer.espn.api.json.player.ESPNPlayer;
+import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.espn.api.json.player.PlayerInfoJSON;
 import fantasy.footballer.espn.api.json.scoreboard.ScoreBoard;
 import fantasy.footballer.espn.api.league.LeagueInfo;
@@ -56,7 +56,7 @@ public class Main {
             .flatMap(playerId -> playerId.ids.stream())
             .collect(Collectors.toSet());
 
-        List<ESPNPlayer> leagueESPNPlayerInfo = new ArrayList<>();
+        List<EspnPlayerAPI> leagueEspnPlayerAPIInfo = new ArrayList<>();
         // We have all of the players in the league, but only by ID.
         // We need to map the ID to a something more generic we can match on with other APIs, I.E. their name
         for( int page = 0; true; page++) {
@@ -65,28 +65,29 @@ public class Main {
                 .forPage(page)
                 .sendRequest();
 
-            List<ESPNPlayer> ESPNPlayers = response.parseAs(PlayerInfoJSON.class).team.ESPNPlayers;
-            leagueESPNPlayerInfo.addAll(
-                ESPNPlayers.stream()
+            List<EspnPlayerAPI> EspnPlayerAPIS = response.parseAs(PlayerInfoJSON.class).team.EspnPlayerAPIS;
+            leagueEspnPlayerAPIInfo.addAll(
+                EspnPlayerAPIS.stream()
                     .filter(ESPNPlayer -> ESPNPlayer.teamId != -1)
                     .collect(Collectors.toList())
             );
 
-            leaguePlayerIds.removeAll(ESPNPlayers.stream()
+            leaguePlayerIds.removeAll(EspnPlayerAPIS.stream()
                 .map(ESPNPlayer -> ESPNPlayer.name.playerId)
                 .collect(Collectors.toSet())
             );
 
-            if (leaguePlayerIds.isEmpty() || ESPNPlayers.isEmpty()) {
+            if (leaguePlayerIds.isEmpty() || EspnPlayerAPIS.isEmpty()) {
                 break;
             }
         }
 
         EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder( new FantasyFootballTiers(LeagueType.PPR));
-        espnPlayerFinder.addEspnPlayers(leagueESPNPlayerInfo);
-        espnPlayerFinder.setMyTeam(teamID);
-        espnPlayerFinder.findAllPossible().forEach(System.out::println);
-        espnPlayerFinder.findTeamBestLineup();
+        espnPlayerFinder.addEspnPlayers(leagueEspnPlayerAPIInfo);
+        espnPlayerFinder.setTeamId(teamID);
+        espnPlayerFinder.findAllPossibleTrades().forEach(System.out::println);
+        System.out.println("Lineup:");
+        espnPlayerFinder.rankPlayersForTeam().forEach((k,v) -> System.out.println(k.getName() +" : " + v.toString()));
 
         System.out.println();
     }

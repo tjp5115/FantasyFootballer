@@ -3,6 +3,7 @@ package fantasy.footballer.player.finder;
 import fantasy.footballer.borischen.Position;
 import fantasy.footballer.player.Player;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class PlayerPosition {
@@ -54,7 +55,7 @@ public class PlayerPosition {
         if ( possiblePlayers.isEmpty() ){
             return "NO PLAYERS";
         }
-        return possiblePlayers + "( Teir " + possiblePlayers.get(0).getTier() + " )";
+        return possiblePlayers.toString();
     }
 
     public int getBestTierAvailableToPickUp() {
@@ -62,6 +63,6 @@ public class PlayerPosition {
     }
 
     public int getWorstTierOnTeam() {
-        return possiblePlayersToDrop.get(0).getTier();
+        return possiblePlayersToDrop.stream().max(Comparator.comparing(Player::getTier)).get().getTier();
     }
 }

@@ -2,57 +2,73 @@ package fantasy.footballer.player.finder;
 
 import fantasy.footballer.borischen.FantasyFootballTiers;
 import fantasy.footballer.borischen.Position;
-import fantasy.footballer.espn.api.json.player.ESPNPlayer;
+import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
+import fantasy.footballer.espn.player.EspnPlayer;
 import fantasy.footballer.player.Player;
-import fantasy.footballer.player.PlayerIdentifier;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class EspnPlayerFinder {
 
-    private Map<Position, List<ESPNPlayer>> leaguePlayers;
+    private Map<Position, List<EspnPlayer>> leaguePlayers;
     private Map<Position,List<Player>> playerTiers;
-    private Integer myTeam;
-    private HashMap<Position, List<PlayerIdentifier>> myPlayers;
+    private Integer teamId;
+    private HashMap<Position, List<Player>> myPlayers;
     private FantasyFootballTiers tierGenerator;
 
     public EspnPlayerFinder(FantasyFootballTiers tierGenerator){
         this.tierGenerator = tierGenerator;
         myPlayers = new HashMap<>();
         playerTiers = new HashMap<>();
+        leaguePlayers = new HashMap<>();
     }
 
-    public void addEspnPlayers(List<ESPNPlayer> leaguePlayers) {
+    public void addEspnPlayers(List<EspnPlayerAPI> leaguePlayers) {
         this.leaguePlayers = leaguePlayers.stream()
-            .collect( Collectors.groupingBy(ESPNPlayer -> Position.fromEspn(ESPNPlayer.name.positionId)) );
+            .map(EspnPlayer::new)
+            .collect( Collectors.groupingBy(Player::getPosition) );
     }
 
-    public void setMyTeam(int myTeam){
-        this.myTeam = myTeam;
+    public void setTeamId(int teamId){
+        this.teamId = teamId;
+        myPlayers.clear();
     }
 
-    public List<PlayerPosition> findAllPossible(){
-        List<PlayerPosition> results = new ArrayList<>();
-        Arrays.stream(Position.values())
-            .forEach(position -> results.add(this.findPossiblePlayersForPosition(position)));
-        return results;
-    }
+    public List<Player> rankPlayersForPosition(Position position) {
+        if( teamId == null ){
+            //todo make an "empty" player position.
+            return null;
+        }
 
-    public PlayerPosition findPossiblePlayersForPosition(Position position) {
-        List<PlayerIdentifier> leaguePlayers = this.leaguePlayers.get(position).stream()
-            .map(PlayerIdentifier::createForEspn)
+        List<Player> teamPlayers = getPlayerTiers(position).stream()
+            .filter( player -> getMyPlayers(position).contains(player))
             .collect(Collectors.toList());
 
-       List<Player> possiblePlayersToPickUp = getPossiblePlayers(position, playerIdentifier -> !leaguePlayers.contains(playerIdentifier));
+        List<Player> playersNotRanked = getMyPlayers(position).stream()
+            .filter(player -> ! teamPlayers.contains(player))
+            .collect(Collectors.toList());
+
+        playersNotRanked.forEach(player -> player.setTier(999));
+
+        teamPlayers.addAll(playersNotRanked);
+        teamPlayers.sort(Comparator.comparing(Player::getTier));
+        return teamPlayers;
+    }
+
+    public PlayerPosition findPossibleTradesForPosition(Position position) {
+        List<EspnPlayer> leaguePlayers = this.leaguePlayers.get(position);
+
+       List<Player> possiblePlayersToPickUp = getPossiblePlayers(position, player -> !leaguePlayers.contains(player));
 
         Integer bestTierAvailable = possiblePlayersToPickUp.stream()
             .min(Comparator.comparing(Player::getTier))
             .map(Player::getTier)
             .orElseThrow(NoSuchElementException::new);
 
-        List<PlayerIdentifier> myPlayers = getMyPlayers(position);
+        List<Player> myPlayers = getMyPlayers(position);
 
         List<Player> possiblePlayersToDrop = getPossiblePlayers(position, myPlayers::contains);
 
@@ -62,7 +78,7 @@ public class EspnPlayerFinder {
             .orElse(999);
 
         possiblePlayersToDrop = possiblePlayersToDrop.stream()
-            .filter(player -> player.getTier() >= worstTierMyTeamHas)
+            .filter(player -> player.getTier() > bestTierAvailable || player.getTier().equals(worstTierMyTeamHas))
             .collect(Collectors.toList());
 
         possiblePlayersToPickUp = possiblePlayersToPickUp.stream()
@@ -72,32 +88,58 @@ public class EspnPlayerFinder {
         return new PlayerPosition(position, possiblePlayersToDrop, possiblePlayersToPickUp);
     }
 
-    private List<PlayerIdentifier> getMyPlayers(Position position) {
-         return myPlayers.computeIfAbsent(position, myPlayers -> populateMyPlayers(position));
+    private List<Player> getMyPlayers(Position position) {
+         return myPlayers.computeIfAbsent(position, myPlayers -> populateTeamsPlayers(position));
     }
 
-    private List<PlayerIdentifier> populateMyPlayers(Position position) {
+    private List<Player> populateTeamsPlayers(Position position) {
         return leaguePlayers.get(position).stream()
-            .filter(ESPNPlayer -> myTeam != null && ESPNPlayer.teamId.intValue() == myTeam.intValue())
-            .map(PlayerIdentifier::createForEspn)
+            .filter(player -> teamId != null && player.getTeamId() == teamId)
             .collect(Collectors.toList());
     }
 
+    /**
+     * Gets the possible tiers for a given position. Populates it with the generator if the Cache does not contain it.
+     * @param position
+     * @return
+     */
     private List<Player> getPlayerTiers(Position position) {
-        return playerTiers.computeIfAbsent(position, teir -> populatePlayerTiers(position));
+        return playerTiers.computeIfAbsent(position, tier -> tierGenerator.getTiers(position));
     }
 
-    private List<Player> populatePlayerTiers(Position position) {
-        return tierGenerator.getTiers(position);
-    }
-
-    private List<Player> getPossiblePlayers(Position position, Predicate<PlayerIdentifier> predicate) {
+    /**
+     * get the Players for a given position and a given predicate.
+     * @param position
+     * @param predicate
+     * @return
+     */
+    private List<Player> getPossiblePlayers(Position position, Predicate<Player> predicate) {
         List<Player> tierList = getPlayerTiers(position);
         return tierList.stream()
-            .filter ( borischenPlayer -> predicate.test(borischenPlayer.getPlayerIdentifier()))
+            .filter (predicate::test)
             .collect(Collectors.toList());
     }
 
-    public void findTeamBestLineup() {
+    public Map<Position,List<Player>> rankPlayersForTeam() {
+        if( teamId == null ) return new HashMap<>();
+        Map<Position,List<Player>> results = Arrays.stream(Position.values())
+            .collect(Collectors.toMap(position -> position, this::rankPlayersForPosition));
+        return results;
+    }
+
+    public List<PlayerPosition> findAllPossibleTrades(){
+        return forEachPosition(this::findPossibleTradesForPosition);
+    }
+
+    /**
+     * Any routine that needs to iterator over all positions and return a PlayerPosition should use this.
+     * @param function
+     * @return
+     */
+    private List<PlayerPosition> forEachPosition(Function<Position,PlayerPosition> function){
+        List<PlayerPosition> results = new ArrayList<>();
+        Arrays.stream(Position.values())
+            .forEach(position -> results.add(function.apply(position)));
+        return results;
     }
 }

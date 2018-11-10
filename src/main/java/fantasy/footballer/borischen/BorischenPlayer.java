@@ -21,6 +21,6 @@ public class BorischenPlayer extends Player{
 
     @Override
     public String toString() {
-        return playerName;
+        return playerName + " ( tier " + tier + " ) ";
     }
 }

@@ -1,7 +1,5 @@
 package fantasy.footballer.player;
 
-import fantasy.footballer.borischen.Position;
-
 public abstract class Player {
     private Position position;
     private String lastName;

@@ -2,6 +2,7 @@ package fantasy.footballer.borischen;
 
 import fantasy.footballer.player.Player;
 import fantasy.footballer.player.PlayerIdentifier;
+import fantasy.footballer.player.Position;
 
 public class BorischenPlayer extends Player{
     private final PlayerIdentifier playerIdentifier;

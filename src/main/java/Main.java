@@ -28,18 +28,23 @@ public class Main {
     public static void main(String args[]) throws IOException {
         makeMyESPNTeamBetter("BLAZ", 102116, 4);
         makeMyESPNTeamBetter("BURN", 155338, 15);
-        makeMyESPNTeamBetter("DAD", 1002004, 11);
+        //makeMyESPNTeamBetter("DAD", 1002004, 11);
+
+        String fileName = "FanDuel-NFL-2018-11-11-29739-players-list.csv";
+
+        List<FanDuelPlayer> players = PlayerList.getPlayerListFromFile("C:\\Users\\tydro\\IdeaProjects\\FantasyFootballer\\resource\\" + fileName);
 
 
-        List<FanDuelPlayer> players = PlayerList.getPlayerListFromFile("C:\\Users\\tydro\\IdeaProjects\\FantasyFootballer\\resource\\FanDuel-NFL-2018-11-04-29518-players-list.csv");
+        FanduelPlayerFinder fanduelPlayerFinder = new FanduelPlayerFinder(players,new FantasyFootballTiers(LeagueType.HALF));
 
-
-        FanduelPlayerFinder fanduelPlayerFinder = new FanduelPlayerFinder(players,new FantasyFootballTiers(LeagueType.PPR));
-
-        for (int i = 1; i < 4; ++i) {
+        for (int i = 1; i < 6; ++i) {
             System.out.println("Tier " + i);
-            fanduelPlayerFinder.findCheapestPlayersForTier(i).forEach(player -> System.out.println(player));
+            fanduelPlayerFinder.findCheapestPlayersForTier(i).forEach(player ->{ if ( player != null ) System.out.println(player.getPosition().getName() + " : " +player);});
         }
+
+
+        System.out.println("Find For Salary");
+        fanduelPlayerFinder.findFlexPlayer(7700).forEach(player -> {if ( player != null ) System.out.println(player.getPosition().getName() + " : " +player );});
     }
 
     public static void makeMyESPNTeamBetter(String teamName, int leagueID, int teamID) throws IOException{

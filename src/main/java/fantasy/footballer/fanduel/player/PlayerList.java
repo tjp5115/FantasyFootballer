@@ -1,6 +1,6 @@
 package fantasy.footballer.fanduel.player;
 
-import fantasy.footballer.borischen.Position;
+import fantasy.footballer.player.Position;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -8,7 +8,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PlayerList {

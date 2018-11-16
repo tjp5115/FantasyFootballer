@@ -1,7 +1,7 @@
 package fantasy.footballer.player.finder;
 
 import fantasy.footballer.borischen.FantasyFootballTiers;
-import fantasy.footballer.borischen.Position;
+import fantasy.footballer.player.Position;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 import fantasy.footballer.player.Player;
 
@@ -51,4 +51,19 @@ public class FanduelPlayerFinder {
         return fanduelPlayers.getOrDefault(position, new ArrayList<>());
     }
 
+    public List<Player> findFlexPlayer(int targetSalary){
+        return findFlexPlayer(targetSalary, targetSalary - 500);
+    }
+
+    public List<Player> findFlexPlayer(int targetSalary, int minSalary) {
+        List<FanDuelPlayer> flexPlayers = new ArrayList<>();
+        flexPlayers.addAll(getPlayersForPosition(Position.WIDE_RECEIVER));
+        flexPlayers.addAll(getPlayersForPosition(Position.TIGHT_END));
+        flexPlayers.addAll(getPlayersForPosition(Position.RUNNING_BACK));
+
+        return flexPlayers.stream()
+            .filter(fanDuelPlayer -> fanDuelPlayer.getSalary() <= targetSalary && fanDuelPlayer.getSalary() >= minSalary)
+            .sorted(Comparator.comparing(FanDuelPlayer::getTier))
+            .collect(Collectors.toList());
+    }
 }

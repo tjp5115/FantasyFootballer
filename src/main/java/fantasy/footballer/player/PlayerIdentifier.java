@@ -1,6 +1,5 @@
 package fantasy.footballer.player;
 
-import fantasy.footballer.borischen.Position;
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 

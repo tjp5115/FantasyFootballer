@@ -2,7 +2,7 @@ package fantasy.footballer.player.finder;
 
 import fantasy.footballer.borischen.BorischenPlayer;
 import fantasy.footballer.borischen.FantasyFootballTiers;
-import fantasy.footballer.borischen.Position;
+import fantasy.footballer.player.Position;
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.espn.api.json.player.PlayerName;
 import fantasy.footballer.player.Player;

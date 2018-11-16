@@ -6,6 +6,7 @@ import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import fantasy.footballer.player.Player;
+import fantasy.footballer.player.Position;
 
 import java.io.IOException;
 import java.util.*;
@@ -27,7 +28,7 @@ public class FantasyFootballTiers {
     String getUrl(Position position){
         StringBuilder sb = new StringBuilder(BASE_URL)
             .append(position);
-        if( position.hasLeagueType ) {
+        if( position.hasLeagueType() ) {
             sb.append('-')
                 .append(leagueType);
         }

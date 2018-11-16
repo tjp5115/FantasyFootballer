@@ -1,5 +1,6 @@
 package fantasy.footballer.borischen;
 
+import fantasy.footballer.player.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

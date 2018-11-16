@@ -1,6 +1,6 @@
 package fantasy.footballer.player.finder;
 
-import fantasy.footballer.borischen.Position;
+import fantasy.footballer.player.Position;
 import fantasy.footballer.player.Player;
 
 import java.util.Comparator;

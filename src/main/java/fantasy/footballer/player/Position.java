@@ -1,4 +1,4 @@
-package fantasy.footballer.borischen;
+package fantasy.footballer.player;
 
 // todo this should be called position. Needs to be reworked -- move to a generic place and let everyone use it.
 public enum Position {
@@ -53,5 +53,9 @@ public enum Position {
             case "D": return DEFENCE;
             default: throw new IllegalArgumentException("'"+position+"' is not a valid position");
         }
+    }
+
+    public boolean hasLeagueType() {
+        return hasLeagueType;
     }
 }

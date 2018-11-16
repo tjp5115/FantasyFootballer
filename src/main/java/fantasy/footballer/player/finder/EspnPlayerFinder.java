@@ -1,7 +1,7 @@
 package fantasy.footballer.player.finder;
 
 import fantasy.footballer.borischen.FantasyFootballTiers;
-import fantasy.footballer.borischen.Position;
+import fantasy.footballer.player.Position;
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.espn.player.EspnPlayer;
 import fantasy.footballer.player.Player;
@@ -116,7 +116,7 @@ public class EspnPlayerFinder {
     private List<Player> getPossiblePlayers(Position position, Predicate<Player> predicate) {
         List<Player> tierList = getPlayerTiers(position);
         return tierList.stream()
-            .filter (predicate::test)
+            .filter (predicate)
             .collect(Collectors.toList());
     }
 

@@ -32,14 +32,14 @@ public class Main {
         //makeMyESPNTeamBetter("BURN", 155338, 15);
         //makeMyESPNTeamBetter("DAD", 1002004, 11);
 
-        String fileName = "FanDuel-NFL-2018-11-18-29988-players-list.csv";
+        String fileName = "FanDuel.csv";
 
         List<FanDuelPlayer> players = PlayerList.getPlayerListFromFile("C:\\Users\\tydro\\IdeaProjects\\FantasyFootballer\\resource\\" + fileName);
 
 
         FanduelPlayerFinder fanduelPlayerFinder = new FanduelPlayerFinder(players,new FantasyFootballTiers(LeagueType.HALF));
 
-        for (int i = 1; i < 6; ++i) {
+        for (int i = 1; i < 9; ++i) {
             System.out.println("Tier " + i);
             fanduelPlayerFinder.findCheapestPlayersForTier(i).forEach((key, value) -> {
                 if(!Position.KICKER.equals(key)) {
@@ -97,7 +97,7 @@ public class Main {
         EspnPlayerFinder espnPlayerFinder = new EspnPlayerFinder( new FantasyFootballTiers(LeagueType.PPR));
         espnPlayerFinder.addEspnPlayers(leagueEspnPlayerAPIInfo);
         espnPlayerFinder.setTeamId(teamID);
-        espnPlayerFinder.findAllPossibleTrades().forEach(System.out::println);
+        //espnPlayerFinder.findAllPossibleTrades().forEach(System.out::println);
         System.out.println("Lineup:");
         espnPlayerFinder.rankPlayersForTeam().forEach((k,v) -> System.out.println(k.getName() +" : " + v.toString()));
 

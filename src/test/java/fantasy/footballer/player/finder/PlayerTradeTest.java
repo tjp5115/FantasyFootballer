@@ -17,18 +17,18 @@ class PlayerTradeTest {
         List<Player> possiblePlayersToDrop = new ArrayList<>();
         List<Player> possiblePlayersToPickUp = new ArrayList<>();
         PlayerTrade playerTrade = new PlayerTrade(Position.DEFENCE,possiblePlayersToDrop,possiblePlayersToPickUp);
-        assertFalse(playerTrade.shouldTrade());
+        assertFalse(playerTrade.isTrade());
         assertEquals("NO PLAYERS", playerTrade.toString());
 
         //with one player to drop
         possiblePlayersToDrop.add( mock(Player.class) );
         playerTrade = new PlayerTrade(Position.DEFENCE,possiblePlayersToDrop,possiblePlayersToPickUp);
-        assertFalse(playerTrade.shouldTrade());
+        assertFalse(playerTrade.isTrade());
 
         //with one player to pick up
         possiblePlayersToDrop.clear();
         possiblePlayersToPickUp.add( mock(Player.class) );
         playerTrade = new PlayerTrade(Position.DEFENCE,possiblePlayersToDrop,possiblePlayersToPickUp);
-        assertFalse(playerTrade.shouldTrade());
+        assertFalse(playerTrade.isTrade());
     }
 }

@@ -50,9 +50,7 @@ class EspnPlayerFinderTest {
 
         PlayerTrade playerTrade = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
-        assertTrue(playerTrade.shouldTrade());
-        assertEquals(5, playerTrade.getBestTierAvailableToPickUp());
-        assertEquals(6, playerTrade.getWorstTierOnTeam());
+        assertTrue(playerTrade.isTrade());
         assertEquals(createPlayer(5,"FIRST","PICKUP"), playerTrade.getPossiblePlayersToPickUp().get(0));
         assertEquals(1,  playerTrade.getPossiblePlayersToPickUp().size());
         assertEquals(createPlayer(6,"FIRST","TRADE"), playerTrade.getPossiblePlayersToDrop().get(0));
@@ -80,9 +78,7 @@ class EspnPlayerFinderTest {
 
         PlayerTrade playerTrade = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
-        assertFalse(playerTrade.shouldTrade());
-        assertEquals(5, playerTrade.getBestTierAvailableToPickUp());
-        assertEquals(5, playerTrade.getWorstTierOnTeam());
+        assertFalse(playerTrade.isTrade());
         assertEquals(createPlayer(5,"FIRST","PICKUP"), playerTrade.getPossiblePlayersToPickUp().get(0));
         assertEquals(1,  playerTrade.getPossiblePlayersToPickUp().size());
         assertEquals(createPlayer(5,"FIRST","NO_TRADE"), playerTrade.getPossiblePlayersToDrop().get(0));
@@ -112,9 +108,7 @@ class EspnPlayerFinderTest {
 
         PlayerTrade playerTrade = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
-        assertTrue(playerTrade.shouldTrade());
-        assertEquals(5, playerTrade.getBestTierAvailableToPickUp());
-        assertEquals(7, playerTrade.getWorstTierOnTeam());
+        assertTrue(playerTrade.isTrade());
         assertEquals(createPlayer(5,"FIRST","PICKUP"), playerTrade.getPossiblePlayersToPickUp().get(0));
         assertEquals(1,  playerTrade.getPossiblePlayersToPickUp().size());
         assertTrue(playerTrade.getPossiblePlayersToDrop().contains(createPlayer(6,"FIRST","TRADE_A")));

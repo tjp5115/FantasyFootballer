@@ -1,0 +1,22 @@
+.player-container{
+  display:flex;
+}
+
+.player-fixed{
+  width: 200px
+}
+
+.player-item{
+  flex-grow: 1;
+}
+
+.position-header{
+  clear:both;
+  margin-bottom: 2px;
+  margin-top:9px;
+}
+
+.player-trade-header{
+  margin:3px;
+  font-weight: bold;
+}

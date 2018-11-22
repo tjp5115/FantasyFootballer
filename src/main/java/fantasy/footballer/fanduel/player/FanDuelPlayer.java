@@ -5,7 +5,6 @@ import fantasy.footballer.player.Player;
 import fantasy.footballer.player.PlayerIdentifier;
 
 public class FanDuelPlayer extends Player {
-    private PlayerIdentifier playerIdentifier;
     private Integer salary;
 
     public FanDuelPlayer(Position position) {
@@ -29,7 +28,7 @@ public class FanDuelPlayer extends Player {
     }
 
     @Override
-    public String toString() {
-        return super.toString() + " | salary : " + salary;
+    public String toString(){
+        return getFirstName() + " " + getLastName() + " - salary:" + salary;
     }
 }

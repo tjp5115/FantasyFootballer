@@ -58,7 +58,7 @@ public class EspnPlayerFinder {
         return teamPlayers;
     }
 
-    public PlayerPosition findPossibleTradesForPosition(Position position) {
+    public PlayerTrade findPossibleTradesForPosition(Position position) {
         List<EspnPlayer> leaguePlayers = this.leaguePlayers.get(position);
 
        List<Player> possiblePlayersToPickUp = getPossiblePlayers(position, player -> !leaguePlayers.contains(player));
@@ -85,7 +85,7 @@ public class EspnPlayerFinder {
             .filter(player -> player.getTier().equals(bestTierAvailable))
             .collect(Collectors.toList());
 
-        return new PlayerPosition(position, possiblePlayersToDrop, possiblePlayersToPickUp);
+        return new PlayerTrade(position, possiblePlayersToDrop, possiblePlayersToPickUp);
     }
 
     private List<Player> getMyPlayers(Position position) {
@@ -127,17 +127,17 @@ public class EspnPlayerFinder {
         return results;
     }
 
-    public List<PlayerPosition> findAllPossibleTrades(){
+    public List<PlayerTrade> findAllPossibleTrades(){
         return forEachPosition(this::findPossibleTradesForPosition);
     }
 
     /**
-     * Any routine that needs to iterator over all positions and return a PlayerPosition should use this.
+     * Any routine that needs to iterator over all positions and return a PlayerTrade should use this.
      * @param function
      * @return
      */
-    private List<PlayerPosition> forEachPosition(Function<Position,PlayerPosition> function){
-        List<PlayerPosition> results = new ArrayList<>();
+    private List<PlayerTrade> forEachPosition(Function<Position,PlayerTrade> function){
+        List<PlayerTrade> results = new ArrayList<>();
         Arrays.stream(Position.values())
             .forEach(position -> results.add(function.apply(position)));
         return results;

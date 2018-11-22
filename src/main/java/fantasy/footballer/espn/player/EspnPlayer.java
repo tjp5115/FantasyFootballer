@@ -1,12 +1,13 @@
 package fantasy.footballer.espn.player;
 
+import com.google.api.client.util.Key;
 import fantasy.footballer.player.Position;
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.player.Player;
 import fantasy.footballer.player.PlayerIdentifier;
 
 public class EspnPlayer extends Player{
-    private final PlayerIdentifier playerIdentifier;
+    @Key
     private int teamId;
 
     public EspnPlayer(EspnPlayerAPI player) {

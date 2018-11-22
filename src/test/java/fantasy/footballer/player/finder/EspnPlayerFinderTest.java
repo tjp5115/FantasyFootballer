@@ -48,15 +48,15 @@ class EspnPlayerFinderTest {
         players.add(createPlayer(5,"FIRST","PICKUP"));
         when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
 
-        PlayerPosition playerPosition = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
+        PlayerTrade playerTrade = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
-        assertTrue(playerPosition.shouldTrade());
-        assertEquals(5, playerPosition.getBestTierAvailableToPickUp());
-        assertEquals(6, playerPosition.getWorstTierOnTeam());
-        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerPosition.getPossiblePlayersToPickUp().get(0));
-        assertEquals(1,  playerPosition.getPossiblePlayersToPickUp().size());
-        assertEquals(createPlayer(6,"FIRST","TRADE"), playerPosition.getPossiblePlayersToDrop().get(0));
-        assertEquals(1, playerPosition.getPossiblePlayersToDrop().size());
+        assertTrue(playerTrade.shouldTrade());
+        assertEquals(5, playerTrade.getBestTierAvailableToPickUp());
+        assertEquals(6, playerTrade.getWorstTierOnTeam());
+        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerTrade.getPossiblePlayersToPickUp().get(0));
+        assertEquals(1,  playerTrade.getPossiblePlayersToPickUp().size());
+        assertEquals(createPlayer(6,"FIRST","TRADE"), playerTrade.getPossiblePlayersToDrop().get(0));
+        assertEquals(1, playerTrade.getPossiblePlayersToDrop().size());
     }
 
     @Test
@@ -78,15 +78,15 @@ class EspnPlayerFinderTest {
         players.add(createPlayer(5,"FIRST","PICKUP"));
         when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
 
-        PlayerPosition playerPosition = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
+        PlayerTrade playerTrade = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
-        assertFalse(playerPosition.shouldTrade());
-        assertEquals(5, playerPosition.getBestTierAvailableToPickUp());
-        assertEquals(5, playerPosition.getWorstTierOnTeam());
-        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerPosition.getPossiblePlayersToPickUp().get(0));
-        assertEquals(1,  playerPosition.getPossiblePlayersToPickUp().size());
-        assertEquals(createPlayer(5,"FIRST","NO_TRADE"), playerPosition.getPossiblePlayersToDrop().get(0));
-        assertEquals(1, playerPosition.getPossiblePlayersToDrop().size());
+        assertFalse(playerTrade.shouldTrade());
+        assertEquals(5, playerTrade.getBestTierAvailableToPickUp());
+        assertEquals(5, playerTrade.getWorstTierOnTeam());
+        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerTrade.getPossiblePlayersToPickUp().get(0));
+        assertEquals(1,  playerTrade.getPossiblePlayersToPickUp().size());
+        assertEquals(createPlayer(5,"FIRST","NO_TRADE"), playerTrade.getPossiblePlayersToDrop().get(0));
+        assertEquals(1, playerTrade.getPossiblePlayersToDrop().size());
     }
 
     @Test
@@ -110,16 +110,16 @@ class EspnPlayerFinderTest {
         players.add(createPlayer(5,"FIRST","PICKUP"));
         when(tierGenerator.getTiers(Position.QUARTER_BACK)).thenReturn(players);
 
-        PlayerPosition playerPosition = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
+        PlayerTrade playerTrade = espnPlayerFinder.findPossibleTradesForPosition(Position.QUARTER_BACK);
 
-        assertTrue(playerPosition.shouldTrade());
-        assertEquals(5, playerPosition.getBestTierAvailableToPickUp());
-        assertEquals(7, playerPosition.getWorstTierOnTeam());
-        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerPosition.getPossiblePlayersToPickUp().get(0));
-        assertEquals(1,  playerPosition.getPossiblePlayersToPickUp().size());
-        assertTrue(playerPosition.getPossiblePlayersToDrop().contains(createPlayer(6,"FIRST","TRADE_A")));
-        assertTrue(playerPosition.getPossiblePlayersToDrop().contains(createPlayer(7,"FIRST","TRADE_B")));
-        assertEquals(2, playerPosition.getPossiblePlayersToDrop().size());
+        assertTrue(playerTrade.shouldTrade());
+        assertEquals(5, playerTrade.getBestTierAvailableToPickUp());
+        assertEquals(7, playerTrade.getWorstTierOnTeam());
+        assertEquals(createPlayer(5,"FIRST","PICKUP"), playerTrade.getPossiblePlayersToPickUp().get(0));
+        assertEquals(1,  playerTrade.getPossiblePlayersToPickUp().size());
+        assertTrue(playerTrade.getPossiblePlayersToDrop().contains(createPlayer(6,"FIRST","TRADE_A")));
+        assertTrue(playerTrade.getPossiblePlayersToDrop().contains(createPlayer(7,"FIRST","TRADE_B")));
+        assertEquals(2, playerTrade.getPossiblePlayersToDrop().size());
     }
 
     private Player createPlayer(int i, EspnPlayerAPI espnPlayerAPI) {

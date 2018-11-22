@@ -1,10 +1,19 @@
 package fantasy.footballer.player;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.api.client.util.Key;
+
 public abstract class Player {
     private Position position;
+    @Key
     private String lastName;
+    @Key
     private String firstName;
+    @Key
     protected Integer tier;
+
+    @JsonIgnore
+    protected transient PlayerIdentifier playerIdentifier;
 
     protected Player(Position position){
         this.position = position;
@@ -15,11 +24,11 @@ public abstract class Player {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = firstName.trim();
     }
 
     public void setLastName(String lastName){
-        this.lastName = lastName;
+        this.lastName = lastName.trim();
     }
 
     public String getFirstName(){

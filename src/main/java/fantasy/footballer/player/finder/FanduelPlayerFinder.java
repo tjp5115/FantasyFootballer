@@ -34,17 +34,19 @@ public class FanduelPlayerFinder {
         }
     }
 
-    public List<Player> findCheapestPlayersForTier(int tier){
-        return Arrays.stream(Position.values())
-            .map(playerType -> findCheapestPlayerForTier(playerType,tier))
-            .collect(Collectors.toList());
+    public Map<Position, List<Player> > findCheapestPlayersForTier(int tier){
+       Map<Position,List<Player>> players = new HashMap<>();
+        for ( Position position : Position.values()){
+            players.put(position,findCheapestPlayerForTier(position,tier));
+        }
+        return players;
     }
-    public Player findCheapestPlayerForTier(Position position, Integer tier){
-        List<FanDuelPlayer> playersForPosition = getPlayersForPosition(position);
-        List<FanDuelPlayer> playersForTeir = playersForPosition.stream()
+    public List<Player> findCheapestPlayerForTier(Position position, Integer tier){
+        return getPlayersForPosition(position).stream()
             .filter(fanduelPlayer -> fanduelPlayer.getTier().equals(tier))
+            .sorted((Comparator.comparing(FanDuelPlayer::getSalary)))
+            .limit(3)
             .collect(Collectors.toList());
-        return playersForTeir.stream().min(Comparator.comparing(FanDuelPlayer::getSalary)).orElse(null);
     }
 
     private List<FanDuelPlayer> getPlayersForPosition(Position position) {

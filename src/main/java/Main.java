@@ -28,8 +28,8 @@ public class Main {
 
 
     public static void main(String args[]) throws IOException {
-        //makeMyESPNTeamBetter("BLAZ", 102116, 4);
-        //makeMyESPNTeamBetter("BURN", 155338, 15);
+        makeMyESPNTeamBetter("BLAZ", 102116, 4);
+        makeMyESPNTeamBetter("BURN", 155338, 15);
         //makeMyESPNTeamBetter("DAD", 1002004, 11);
 
         String fileName = "FanDuel.csv";

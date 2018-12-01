@@ -1,0 +1,11 @@
+.trade{
+  width: 350px
+}
+
+.lineup{
+	flex-grow: 1;
+}
+
+.league-container{
+	display:flex;
+}

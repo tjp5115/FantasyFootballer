@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import League from './League';
+import Fanduel from './Fanduel';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class App extends Component {
@@ -27,6 +28,9 @@ class App extends Component {
     return <Router>
       <div>
         <ul>
+          <li>
+            <Link to="/fanduel">Fanduel</Link>
+          </li>
         {getTeams().data.items.map(league => 
           <li>
           
@@ -37,6 +41,7 @@ class App extends Component {
         )}
         </ul>
         <Route path="/league" component={League}/>
+        <Route path="/fanduel" component={Fanduel}/>
       </div>
     </Router>
   }

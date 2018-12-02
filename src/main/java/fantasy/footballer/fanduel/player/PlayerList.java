@@ -3,19 +3,17 @@ package fantasy.footballer.fanduel.player;
 import fantasy.footballer.player.Position;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerList {
-    public static List<FanDuelPlayer> getPlayerListFromFile(String fileName){
+    public static List<FanDuelPlayer> getPlayerListFromFile(Reader reader){
         Iterable<CSVRecord> records;
         try {
-            Reader in = new FileReader(fileName);
-            records = CSVFormat.DEFAULT.withHeader().parse(in);
+            records = CSVFormat.DEFAULT.withHeader().parse(reader);
         } catch (IOException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -31,4 +29,26 @@ public class PlayerList {
         }
         return playerList;
     }
+
+    public static List<FanDuelPlayer> getPlayerListFromFile(MultipartFile multipart){
+        File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+multipart.getOriginalFilename());
+        try {
+            multipart.transferTo(convFile);
+            Reader in = new FileReader(convFile);
+            return getPlayerListFromFile(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+    public static List<FanDuelPlayer> getPlayerListFromFile(String fileName){
+        try {
+            return getPlayerListFromFile(new FileReader(fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }

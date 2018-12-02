@@ -36,7 +36,7 @@ class Lineup extends Component {
 	}
 
 	render(){
-		const { error, isLoaded, items, leagueName } = this.state;
+		const { error, isLoaded, items } = this.state;
 
 	    if (error) {
 	      return <div>Error: {error.message}</div>;

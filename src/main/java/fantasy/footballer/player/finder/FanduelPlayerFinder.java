@@ -34,18 +34,23 @@ public class FanduelPlayerFinder {
         }
     }
 
-    public Map<Position, List<Player> > findCheapestPlayersForTier(int tier){
-       Map<Position,List<Player>> players = new HashMap<>();
+    public Map<Position, List<FanDuelPlayer> > findCheapestPlayersForTier(int tier){
+        return findCheapestPlayersForTier(tier,3);
+    }
+
+    public Map<Position, List<FanDuelPlayer> > findCheapestPlayersForTier(int tier, int numberOfPlayersPerTier){
+       Map<Position,List<FanDuelPlayer>> players = new HashMap<>();
         for ( Position position : Position.values()){
-            players.put(position,findCheapestPlayerForTier(position,tier));
+            players.put(position,findCheapestPlayerForTier(position,tier, numberOfPlayersPerTier));
         }
         return players;
     }
-    public List<Player> findCheapestPlayerForTier(Position position, Integer tier){
+
+    private List<FanDuelPlayer> findCheapestPlayerForTier(Position position, Integer tier, int numberOfPlayersPerTier){
         return getPlayersForPosition(position).stream()
             .filter(fanduelPlayer -> fanduelPlayer.getTier().equals(tier))
             .sorted((Comparator.comparing(FanDuelPlayer::getSalary)))
-            .limit(3)
+            .limit(numberOfPlayersPerTier)
             .collect(Collectors.toList());
     }
 
@@ -53,11 +58,11 @@ public class FanduelPlayerFinder {
         return fanduelPlayers.getOrDefault(position, new ArrayList<>());
     }
 
-    public List<Player> findFlexPlayer(int targetSalary){
+    public List<FanDuelPlayer> findFlexPlayer(int targetSalary){
         return findFlexPlayer(targetSalary, targetSalary - 500);
     }
 
-    public List<Player> findFlexPlayer(int targetSalary, int minSalary) {
+    public List<FanDuelPlayer> findFlexPlayer(int targetSalary, int minSalary) {
         List<FanDuelPlayer> flexPlayers = new ArrayList<>();
         flexPlayers.addAll(getPlayersForPosition(Position.WIDE_RECEIVER));
         flexPlayers.addAll(getPlayersForPosition(Position.TIGHT_END));

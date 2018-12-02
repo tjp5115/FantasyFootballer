@@ -1,0 +1,10 @@
+.fanduel-players-flex{
+	flex: 0 0 200px;
+}
+.fanduel-players-fixed{
+	flex: 0 0 200px;
+}
+
+.fanduel-player-container{
+  display:flex;
+}

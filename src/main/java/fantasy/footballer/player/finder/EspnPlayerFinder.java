@@ -66,7 +66,11 @@ public class EspnPlayerFinder {
         Integer bestTierAvailable = possiblePlayersToPickUp.stream()
             .min(Comparator.comparing(Player::getTier))
             .map(Player::getTier)
-            .orElseThrow(NoSuchElementException::new);
+            .orElse(-99);
+
+        if(bestTierAvailable == -99){
+            return new PlayerTrade(position, new ArrayList<>(),new ArrayList<>());
+        }
 
         List<Player> myPlayers = getMyPlayers(position);
 

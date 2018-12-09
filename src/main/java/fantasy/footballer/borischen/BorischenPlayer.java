@@ -15,7 +15,7 @@ public class BorischenPlayer extends Player{
 
         int i = this.playerName.indexOf(' ');
         this.setFirstName(this.playerName.substring(0,i));
-        this.setLastName(this.playerName.substring(i,this.playerName.length()-1));
+        this.setLastName(this.playerName.substring(i,this.playerName.length()));
     }
 
     @Override

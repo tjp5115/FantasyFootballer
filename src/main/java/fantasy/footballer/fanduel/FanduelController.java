@@ -30,7 +30,6 @@ public class FanduelController {
 
         Data<FanDuelPlayer> fanDuelPlayerData = new Data<>();
         for (int i = 1; i < numberOfTiers; ++i) {
-            System.out.println("Tier " + i);
             for( Map.Entry<Position,List<FanDuelPlayer>> entry : fanduelPlayerFinder.findCheapestPlayersForTier(i,numberOfPlayersPerTier).entrySet()) {
                 if(!Position.KICKER.equals(entry.getKey()) || ! entry.getValue().isEmpty()) {
                     fanDuelPlayerData.addItems(entry.getValue());

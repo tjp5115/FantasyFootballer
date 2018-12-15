@@ -23,14 +23,14 @@ public class FanduelPlayerFinder {
            .collect(Collectors.groupingBy(Player::getPosition));
     }
 
-    private Integer getTierForPlayer( Player fanDuelPlayer ) {
+    private Integer getTierForPlayer(Player fanDuelPlayer ) {
         Optional<Player> tierPlayer = fantasyFootballTiers.getTiers(fanDuelPlayer.getPosition()).stream()
             .filter( player -> fanDuelPlayer.getPlayerIdentifier().equals(player.getPlayerIdentifier()))
             .findFirst();
         if ( tierPlayer.isPresent() ){
             return tierPlayer.get().getTier();
         }else{
-            return 999;
+            return Integer.MAX_VALUE;
         }
     }
 

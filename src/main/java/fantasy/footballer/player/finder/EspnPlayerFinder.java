@@ -5,6 +5,7 @@ import fantasy.footballer.player.Position;
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
 import fantasy.footballer.espn.player.EspnPlayer;
 import fantasy.footballer.player.Player;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.function.Function;
@@ -12,6 +13,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class EspnPlayerFinder {
+
+    Logger logger = Logger.getLogger(EspnPlayerFinder.class);
 
     private Map<Position, List<EspnPlayer>> leaguePlayers;
     private Map<Position,List<Player>> playerTiers;
@@ -51,7 +54,7 @@ public class EspnPlayerFinder {
             .filter(player -> ! teamPlayers.contains(player))
             .collect(Collectors.toList());
 
-        playersNotRanked.forEach(player -> player.setTier(999));
+        playersNotRanked.forEach(player -> player.setTier(Integer.MAX_VALUE));
 
         teamPlayers.addAll(playersNotRanked);
         teamPlayers.sort(Comparator.comparing(Player::getTier));
@@ -61,35 +64,35 @@ public class EspnPlayerFinder {
     public PlayerTrade findPossibleTradesForPosition(Position position) {
         List<EspnPlayer> leaguePlayers = this.leaguePlayers.get(position);
 
-       List<Player> possiblePlayersToPickUp = getPossiblePlayers(position, player -> !leaguePlayers.contains(player));
+        List<Player> availableLeaguePlayers = getPossiblePlayers(position, player -> !leaguePlayers.contains(player));
 
-        Integer bestTierAvailable = possiblePlayersToPickUp.stream()
-            .min(Comparator.comparing(Player::getTier))
-            .map(Player::getTier)
-            .orElse(-99);
+        Integer bestTierAvailable = Integer.MAX_VALUE;
+        List<Player> bestAvailablePlayers = new ArrayList<>();
+        for (Player player : availableLeaguePlayers) {
+            int compareTo = player.getTier().compareTo(bestTierAvailable);
 
-        if(bestTierAvailable == -99){
-            return new PlayerTrade(position, new ArrayList<>(),new ArrayList<>());
+            if (compareTo < 0) {
+                bestAvailablePlayers.clear();
+                bestTierAvailable = player.getTier();
+            }
+
+            if (compareTo < 1) {
+                bestAvailablePlayers.add(player);
+            }
+
+            if (player.getTier().equals(Integer.MAX_VALUE)) {
+                logger.error(String.format("Did not find player [%s]",player.getPlayerIdentifier()));
+            }
+
         }
 
-        List<Player> myPlayers = getMyPlayers(position);
-
-        List<Player> possiblePlayersToDrop = getPossiblePlayers(position, myPlayers::contains);
-
-        Integer worstTierMyTeamHas = possiblePlayersToDrop.stream()
-            .max(Comparator.comparing(Player::getTier))
-            .map(Player::getTier)
-            .orElse(999);
-
-        possiblePlayersToDrop = possiblePlayersToDrop.stream()
-            .filter(player -> player.getTier() > bestTierAvailable || player.getTier().equals(worstTierMyTeamHas))
+        List<Player> myPlayers = getPossiblePlayers(position, getMyPlayers(position)::contains);
+        Integer finalBestTierAvailable = bestTierAvailable;
+        List<Player> possiblePlayersToDrop = myPlayers.stream()
+            .filter(player -> player.getTier().compareTo(finalBestTierAvailable) > -1)
             .collect(Collectors.toList());
 
-        possiblePlayersToPickUp = possiblePlayersToPickUp.stream()
-            .filter(player -> player.getTier().equals(bestTierAvailable))
-            .collect(Collectors.toList());
-
-        return new PlayerTrade(position, possiblePlayersToDrop, possiblePlayersToPickUp);
+        return new PlayerTrade(position, possiblePlayersToDrop, bestAvailablePlayers);
     }
 
     private List<Player> getMyPlayers(Position position) {
@@ -118,10 +121,14 @@ public class EspnPlayerFinder {
      * @return
      */
     private List<Player> getPossiblePlayers(Position position, Predicate<Player> predicate) {
-        List<Player> tierList = getPlayerTiers(position);
-        return tierList.stream()
-            .filter (predicate)
-            .collect(Collectors.toList());
+        List<Player> possiblePlayers = new ArrayList<>();
+        for(Player player :  getPlayerTiers(position)){
+            if(predicate.test(player)){
+                possiblePlayers.add(player);
+            }
+        }
+
+        return possiblePlayers;
     }
 
     public Map<Position,List<Player>> rankPlayersForTeam() {

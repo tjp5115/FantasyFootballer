@@ -1,18 +1,13 @@
 package fantasy.footballer.player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.api.client.util.Key;
 
 public abstract class Player {
     private Position position;
-    @Key
     private String lastName;
-    @Key
     private String firstName;
-    @Key
     protected Integer tier;
 
-    @JsonIgnore
     protected transient PlayerIdentifier playerIdentifier;
 
     protected Player(Position position){
@@ -47,6 +42,7 @@ public abstract class Player {
         this.tier = tier;
     }
 
+    @JsonIgnore
     public abstract PlayerIdentifier getPlayerIdentifier();
 
     @Override

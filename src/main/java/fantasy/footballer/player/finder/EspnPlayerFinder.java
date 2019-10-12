@@ -16,10 +16,10 @@ public class EspnPlayerFinder {
 
     Logger logger = Logger.getLogger(EspnPlayerFinder.class);
 
-    private Map<Position, List<EspnPlayer>> leaguePlayers;
-    private Map<Position,List<Player>> playerTiers;
+    private Map<Position, Set<EspnPlayer>> leaguePlayers;
+    private Map<Position, Set<Player>> playerTiers;
     private Integer teamId;
-    private HashMap<Position, List<Player>> myPlayers;
+    private HashMap<Position, Set<Player>> myPlayers;
     private FantasyFootballTiers tierGenerator;
 
     public EspnPlayerFinder(FantasyFootballTiers tierGenerator){
@@ -32,7 +32,7 @@ public class EspnPlayerFinder {
     public void addEspnPlayers(List<EspnPlayerAPI> leaguePlayers) {
         this.leaguePlayers = leaguePlayers.stream()
             .map(EspnPlayer::new)
-            .collect( Collectors.groupingBy(Player::getPosition) );
+            .collect(Collectors.groupingBy(Player::getPosition, Collectors.toSet()));
     }
 
     public void setTeamId(int teamId){
@@ -62,9 +62,11 @@ public class EspnPlayerFinder {
     }
 
     public PlayerTrade findPossibleTradesForPosition(Position position) {
-        List<EspnPlayer> leaguePlayers = this.leaguePlayers.get(position);
+        Set<Player> freeAgents = leaguePlayers.get(position).stream()
+                .filter(player -> "FREEAGENT".equals(player.getStatus()))
+                .collect(Collectors.toSet());
 
-        List<Player> availableLeaguePlayers = getPossiblePlayers(position, player -> !leaguePlayers.contains(player));
+        List<Player> availableLeaguePlayers = getPossiblePlayers(position, freeAgents::contains);
 
         Integer bestTierAvailable = Integer.MAX_VALUE;
         List<Player> bestAvailablePlayers = new ArrayList<>();
@@ -95,14 +97,14 @@ public class EspnPlayerFinder {
         return new PlayerTrade(position, possiblePlayersToDrop, bestAvailablePlayers);
     }
 
-    private List<Player> getMyPlayers(Position position) {
+    private Set<Player> getMyPlayers(Position position) {
          return myPlayers.computeIfAbsent(position, myPlayers -> populateTeamsPlayers(position));
     }
 
-    private List<Player> populateTeamsPlayers(Position position) {
+    private Set<Player> populateTeamsPlayers(Position position) {
         return leaguePlayers.get(position).stream()
             .filter(player -> teamId != null && player.getTeamId() == teamId)
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
     }
 
     /**
@@ -110,8 +112,9 @@ public class EspnPlayerFinder {
      * @param position
      * @return
      */
-    private List<Player> getPlayerTiers(Position position) {
-        return playerTiers.computeIfAbsent(position, tier -> tierGenerator.getTiers(position));
+    private Set<Player> getPlayerTiers(Position position) {
+        // todo make the hashset kind of nice.
+        return playerTiers.computeIfAbsent(position, tier -> new HashSet(tierGenerator.getTiers(position)));
     }
 
     /**

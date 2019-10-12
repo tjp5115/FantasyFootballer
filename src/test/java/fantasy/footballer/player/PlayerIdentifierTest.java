@@ -1,7 +1,7 @@
 package fantasy.footballer.player;
 
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
-import fantasy.footballer.espn.api.json.player.PlayerName;
+import fantasy.footballer.espn.api.json.player.PlayerInfo;
 import fantasy.footballer.fanduel.player.FanDuelPlayer;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ class PlayerIdentifierTest {
 
     @Test
     void create_for_ESPN_offence(){
-        EspnPlayerAPI player = new EspnPlayerAPI(new PlayerName("First Name II","Last Name Jr."));
+        EspnPlayerAPI player = new EspnPlayerAPI(new PlayerInfo("First Name II","Last Name Jr."));
         PlayerIdentifier results = PlayerIdentifier.createForEspn(player);
         PlayerIdentifier expected = new PlayerIdentifier("FIRSTNAMELASTNAME".toLowerCase());
         assertEquals(expected,results);
@@ -38,7 +38,7 @@ class PlayerIdentifierTest {
 
     @Test
     void create_for_ESPN_defence(){
-        EspnPlayerAPI player = new EspnPlayerAPI(new PlayerName("First Name SR.","Last Name d/st"));
+        EspnPlayerAPI player = new EspnPlayerAPI(new PlayerInfo("First Name SR.","Last Name d/st"));
         PlayerIdentifier results = PlayerIdentifier.createForEspn(player);
         PlayerIdentifier expected = new PlayerIdentifier("FIRSTNAMELASTNAME".toLowerCase());
         assertEquals(expected,results);

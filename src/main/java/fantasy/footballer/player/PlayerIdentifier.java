@@ -31,7 +31,7 @@ public class PlayerIdentifier {
     }
 
     public static PlayerIdentifier createForEspn(EspnPlayerAPI EspnPlayerAPI){
-        PlayerIdentifier identifier = createForName(EspnPlayerAPI.name.firstName, EspnPlayerAPI.name.lastName);
+        PlayerIdentifier identifier = createForName(EspnPlayerAPI.info.firstName, EspnPlayerAPI.info.lastName);
         if ( ESPN_EXCEPTIONS.containsKey(identifier) ){
             return ESPN_EXCEPTIONS.get(identifier);
         }

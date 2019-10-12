@@ -13,10 +13,10 @@ class League extends Component {
     const values = queryString.parse(this.props.location.search);
     return <div className="league-container">
       <div className="trade">
-        <Trade teamId={values.teamId} leagueId={values.leagueId} />
+        <Trade teamId={values.teamId} leagueId={values.leagueId} leagueType={values.leagueType}/>
       </div>
       <div className="lineup">
-        <Lineup  teamId={values.teamId} leagueId={values.leagueId} />
+        <Lineup  teamId={values.teamId} leagueId={values.leagueId} leagueType={values.leagueType}/>
       </div>
     </div>
     }

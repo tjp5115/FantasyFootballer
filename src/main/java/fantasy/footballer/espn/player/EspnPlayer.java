@@ -9,13 +9,15 @@ import fantasy.footballer.player.PlayerIdentifier;
 public class EspnPlayer extends Player{
     @Key
     private int teamId;
+    private String status;
 
     public EspnPlayer(EspnPlayerAPI player) {
-        super(Position.fromEspn(player.name.positionId));
-        setFirstName(player.name.firstName);
-        setLastName(player.name.lastName);
+        super(Position.fromEspn(player.info.positionId));
+        setFirstName(player.info.firstName);
+        setLastName(player.info.lastName);
         teamId = player.teamId;
         playerIdentifier = PlayerIdentifier.createForEspn(player);
+        status = player.status;
     }
 
     public int getTeamId() {
@@ -25,5 +27,9 @@ public class EspnPlayer extends Player{
     @Override
     public PlayerIdentifier getPlayerIdentifier() {
         return playerIdentifier;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

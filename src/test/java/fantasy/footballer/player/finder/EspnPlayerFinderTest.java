@@ -4,7 +4,7 @@ import fantasy.footballer.borischen.BorischenPlayer;
 import fantasy.footballer.borischen.FantasyFootballTiers;
 import fantasy.footballer.player.Position;
 import fantasy.footballer.espn.api.json.player.EspnPlayerAPI;
-import fantasy.footballer.espn.api.json.player.PlayerName;
+import fantasy.footballer.espn.api.json.player.PlayerInfo;
 import fantasy.footballer.player.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class EspnPlayerFinderTest {
@@ -117,11 +116,11 @@ class EspnPlayerFinderTest {
     }
 
     private Player createPlayer(int i, EspnPlayerAPI espnPlayerAPI) {
-        return createPlayer(i, espnPlayerAPI.name.firstName, espnPlayerAPI.name.lastName);
+        return createPlayer(i, espnPlayerAPI.info.firstName, espnPlayerAPI.info.lastName);
     }
 
     private EspnPlayerAPI createESPNPlayer(String first, String last, int teamId) {
-        PlayerName playerName = new PlayerName(first,last);
+        PlayerInfo playerName = new PlayerInfo(first,last);
         playerName.positionId = 1; //QB
         EspnPlayerAPI espnPlayerAPI = new EspnPlayerAPI(playerName);
         espnPlayerAPI.teamId = teamId;

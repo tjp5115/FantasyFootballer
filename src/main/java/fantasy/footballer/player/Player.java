@@ -2,6 +2,8 @@ package fantasy.footballer.player;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.Objects;
+
 public abstract class Player {
     private Position position;
     private String lastName;
@@ -59,6 +61,12 @@ public abstract class Player {
         }
 
         return playerIdentifier != null && playerIdentifier.equals(getPlayerIdentifier());
+    }
+
+    @Override
+    public int hashCode() {
+        // todo what if the player has two positions.
+        return Objects.hash(playerIdentifier);
     }
 
     @Override

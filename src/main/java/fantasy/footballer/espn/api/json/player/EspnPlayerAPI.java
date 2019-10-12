@@ -4,13 +4,15 @@ import com.google.api.client.util.Key;
 
 public class EspnPlayerAPI {
     @Key("player")
-    public PlayerName name;
-    @Key("teamId")
+    public PlayerInfo info;
+    @Key("onTeamId")
     public Integer teamId;
+    @Key("status")
+    public String status;
 
     public EspnPlayerAPI(){}
 
-    public EspnPlayerAPI(PlayerName playerName) {
-        this.name = playerName;
+    public EspnPlayerAPI(PlayerInfo info) {
+        this.info = info;
     }
 }

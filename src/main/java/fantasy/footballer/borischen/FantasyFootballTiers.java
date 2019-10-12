@@ -29,8 +29,10 @@ public class FantasyFootballTiers {
         StringBuilder sb = new StringBuilder(BASE_URL)
             .append(position);
         if( position.hasLeagueType() ) {
-            sb.append('-')
-                .append(leagueType);
+            if(!LeagueType.NORMAL.equals(leagueType)) {
+                sb.append('-')
+                        .append(leagueType);
+            }
         }
         sb.append(FILE_EXTENSION);
         return sb.toString();

@@ -2,6 +2,7 @@ package fantasy.footballer.borischen;
 
 public enum LeagueType {
     PPR("PPR"),
+    NORMAL("NORMAL"),
     HALF("HALF");
 
     String abbreviation;

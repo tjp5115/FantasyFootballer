@@ -25,7 +25,6 @@ class EspnAPITest {
     @Test
     public void forWeek(){
         espnAPI = new EspnAPI();
-        espnAPI.forWeek("10");
         Assertions.assertTrue(espnAPI.getRequest().values().contains("10"));
     }
 }

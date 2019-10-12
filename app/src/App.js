@@ -16,9 +16,8 @@ class App extends Component {
     return {
       "data" : {
         "items" : [ 
-          {"leagueId":102116,"teamId":4,"name":"Blaz"},
-          {"leagueId":155338,"teamId":15,"name":"BURN"},
-          {"leagueId":1002004,"teamId":11,"name":"DAD"}
+          {"leagueId":1002004,"teamId":18,"name":"Trip", "leagueType":"NORMAL"},
+          {"leagueId":155338,"teamId":15,"name":"BURN",  "leagueType":"PPR"},
         ]
       }
     }
@@ -34,7 +33,7 @@ class App extends Component {
         {getTeams().data.items.map(league => 
           <li>
           
-            <Link to={{ pathname: "/league", search:"?leagueId="+league.leagueId+"&teamId="+league.teamId}} >
+            <Link to={{ pathname: "/league", search:"?leagueId="+league.leagueId+"&teamId="+league.teamId+"&leagueType="+league.leagueType}} >
               {league.name}
             </Link>
           </li>

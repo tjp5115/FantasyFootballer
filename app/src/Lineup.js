@@ -10,6 +10,7 @@ class Lineup extends Component {
 		  leagueId: props.leagueId,
 		  teamId: props.teamId,
 		  leagueName: props.leagueName,
+		  leagueType: props.leagueType,
 		  isLoaded: null,
 		  items: [],
 		};
@@ -60,8 +61,8 @@ class Lineup extends Component {
 }
 
 function updateWithPlayers(trade){
-	const {leagueId, teamId} = trade.props;
-	fetch("http://localhost:8080/footballer/espn/lineup?leagueID="+leagueId+"&teamID="+teamId)
+	const {leagueId, teamId, leagueType} = trade.props;
+	fetch("http://localhost:8080/footballer/espn/lineup?leagueID="+leagueId+"&teamID="+teamId+"&leagueType="+leagueType)
 	.then(res => res.json())
 	.then(
 	  (result) => {

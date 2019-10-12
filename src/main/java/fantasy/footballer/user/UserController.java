@@ -5,7 +5,6 @@ import fantasy.footballer.api.Root;
 import fantasy.footballer.espn.EspnLeague;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;

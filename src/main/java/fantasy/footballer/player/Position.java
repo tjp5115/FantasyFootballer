@@ -35,6 +35,8 @@ public enum Position {
             case 4: return TIGHT_END;
             case 5: return KICKER;
             case 16: return DEFENCE;
+            // todo i think this is right, there was a punter in here.
+            case 7: return KICKER;
             default: throw new IllegalArgumentException("'"+Integer.toString(i)+"' is not a valid position");
         }
     }

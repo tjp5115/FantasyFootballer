@@ -2,19 +2,19 @@ package fantasy.footballer.espn.api.json.player;
 
 import com.google.api.client.util.Key;
 
-public class PlayerName {
+public class PlayerInfo {
     @Key("lastName")
     public String lastName;
     @Key("firstName")
     public String firstName;
-    @Key("playerId")
+    @Key("id")
     public Integer playerId;
     @Key("defaultPositionId")
     public Integer positionId;
 
-    public PlayerName(){}
+    public PlayerInfo(){}
 
-    public PlayerName(String first, String last) {
+    public PlayerInfo(String first, String last) {
         firstName = first;
         lastName = last;
     }
